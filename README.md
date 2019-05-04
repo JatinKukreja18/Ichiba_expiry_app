@@ -1,1 +1,0 @@
-# Ichiba_expiry_app
