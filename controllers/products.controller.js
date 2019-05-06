@@ -33,13 +33,14 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
     try {
-        if (req.body && req.body.SKU && req.body.name && req.body.quantity && req.body.expiry) {
+        if (req.body && req.body.SKU && req.body.name && req.body.quantity) {
             let product = new Products(req.body);
             Object.assign(product, { updatedOn: new Date().getTime()});
-            await product.save();
-            res.status(200).send(null);
+            console.log("New Product: ", product);
+            let newProduct = await product.save();
+            res.status(200).send({message: "Product created successfully!!", data: newProduct});
         } else {
-            res.status(400).send(null);
+            res.status(400).send({message: "Product not created!!", data: null});
         }
     } catch (error) {
         console.log("Error", error);
@@ -60,7 +61,7 @@ router.put('/:id', async (req, res, next) => {
         if (req && req.params && req.params['id'] && req.body) {
             let updateObj = req.body;
             Object.assign(updateObj, {updatedOn: new Date()})
-            let updatedObj = await Products.findByIdAndUpdate(req.params['id'], updateObj);
+            let updatedObj = await Products.findByIdAndUpdate(req.params['id'], updateObj, {new: true, runValidators: true});
             res.status(200).send({message: 'Product updated', data: updatedObj});
         } else {
             res.status(400).send({message: 'Product not updated', data: null});
@@ -87,6 +88,6 @@ router.delete('/:id', async (req, res) => {
     } catch (error) {
         res.status(500).send({message: "Internal Server Error", data: null});
     }
-})
+});
 
 module.exports = router;

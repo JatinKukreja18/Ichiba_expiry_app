@@ -15,9 +15,6 @@ let ProductsSchema = new Schema({
         type: Number,
         required: true
     },
-    expiry: {
-        type: Date
-    },
     notifyBefore: {
         type: Number
     },
@@ -40,9 +37,9 @@ ProductsSchema.path('name').validate(async (value) => {
     return !nameCount;
 }, 'Name already exists');
 
-ProductsSchema.path('expiry').validate((value) => {
-    const expiryDate = new Date(value);
-    return expiryDate.getTime() > new Date().getTime() + (7 * 24 * 60 * 60 * 1000)
-}, 'Expiry date should be more than 7 days');
+// ProductsSchema.path('expiry').validate((value) => {
+//     const expiryDate = new Date(value);
+//     return expiryDate.getTime() > new Date().getTime() + (7 * 24 * 60 * 60 * 1000)
+// }, 'Expiry date should be more than 7 days');
 
 module.exports = mongoose.model('products', ProductsSchema);
